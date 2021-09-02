@@ -135,9 +135,14 @@ def weighted_vote(targets: np.ndarray, distances: np.ndarray, classes: list) -> 
     Given a list of nearest targets, vote for the most
     popular
     """
-    # Remove if you don't go for independent section
-    weights = np.divide(targets, distances)
-    return np.argmax(weights)
+    arr = np.stack((targets, distances), axis=-1)
+    classsum = np.zeros((len(classes), 1))
+    for i in classes:
+        for k in range(len(arr)):
+            if arr[k, 0] == i:
+                classsum[i] += 1 / arr[k, 1]
+
+    return classes[np.argmax(classsum)]
 
 
 def wknn(
@@ -147,19 +152,54 @@ def wknn(
     Combine k_nearest and vote
     """
     # Remove if you don't go for independent section
-    ...
+    distances = euclidian_distances(x, points)
+
+    return weighted_vote(
+        point_targets[k_nearest(x, points, k)],
+        distances[k_nearest(x, points, k)],
+        classes,
+    )
 
 
 def wknn_predict(
     points: np.ndarray, point_targets: np.ndarray, classes: list, k: int
 ) -> np.ndarray:
     # Remove if you don't go for independent section
-    ...
+    results = np.ndarray(0, dtype=int)
+    for i in range(points.shape[0]):
+        x = points[i, :]
+        points_i = help.remove_one(points, i)
+        point_targets_i = help.remove_one(point_targets, i)
+        results = np.append(results, wknn(x, points_i, point_targets_i, classes, k))
+    return results
+
+
+def wknn_accuracy(
+    points: np.ndarray, point_targets: np.ndarray, classes: list, k: int
+) -> float:
+    count = 0
+    prediction = wknn_predict(points, point_targets, classes, k)
+    for i in range(len(prediction)):
+        if prediction[i] != point_targets[i]:
+            count += 1
+    return 1 - (count / len(prediction))
 
 
 def compare_knns(points: np.ndarray, targets: np.ndarray, classes: list):
     # Remove if you don't go for independent section
-    ...
+    x = range(1, len(points) - 1)
+    y1 = []
+    y2 = []
+    for k in range(1, len(points) - 1):
+        y1.append(knn_accuracy(points, targets, classes, k))
+        y2.append(wknn_accuracy(points, targets, classes, k))
+    plt.plot(x, y1, x, y2)
+    plt.title("Comparison of kNN and wkNN")
+    plt.xlabel("k")
+    plt.ylabel("Accuracy")
+    plt.legend(["kNN", "wkNN"])
+    plt.savefig("images/b_4_1.png")
+    plt.show()
 
 
 if __name__ == "__main__":
@@ -181,4 +221,7 @@ if __name__ == "__main__":
     # print(knn_accuracy(d_test, t_test, classes, 118))
     # print(best_k(d_train, t_train, classes))
     # knn_plot_points(d, t, classes, 3)
-    weighted_vote()
+    # weighted_vote()
+    # print(wknn_accuracy(d_test, t_test, classes, 10))
+    # print(wknn_predict(d_test, t_test, classes, 10))
+    compare_knns(d_test, t_test, classes)
