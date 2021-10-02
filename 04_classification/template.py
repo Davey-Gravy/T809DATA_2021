@@ -1,5 +1,5 @@
 from tools import load_iris, split_train_test
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, accuracy_score
 
 import matplotlib.pyplot as plt
 import numpy as np
