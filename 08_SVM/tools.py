@@ -5,19 +5,19 @@ from sklearn.model_selection import train_test_split
 
 
 def load_cancer():
-    '''
+    """
     Return the breast cancer dataset split into
     train and test sets.
-    '''
+    """
     cancer = datasets.load_breast_cancer()
     X_train, X_test, t_train, t_test = train_test_split(
-        cancer.data, cancer.target,
-        test_size=0.3)
+        cancer.data, cancer.target, test_size=0.3
+    )
     return (X_train, t_train), (X_test, t_test)
 
 
 def load_binary_iris():
-    '''
+    """
     Load the iris dataset that contains N input features
     of dimension F and N target classes. Only load classes
     0 an 1.
@@ -25,25 +25,19 @@ def load_binary_iris():
     Returns:
     * inputs (np.ndarray): A [N x F] array of input features
     * targets (np.ndarray): A [N,] array of target classes
-    '''
+    """
     iris = datasets.load_iris()
-    index = np.hstack((
-        np.where(iris.target == 0),
-        np.where(iris.target == 1)))
+    index = np.hstack((np.where(iris.target == 0), np.where(iris.target == 1)))
     iris.data = iris.data[index[0], :]
     iris.target = iris.target[index[0]]
     X_train, X_test, t_train, t_test = train_test_split(
-        iris.data, iris.target,
-        test_size=0.3)
+        iris.data, iris.target, test_size=0.3
+    )
     return (X_train, t_train), (X_test, t_test)
 
 
-def plot_svm_margin(
-    svc,
-    X: np.ndarray,
-    t: np.ndarray
-):
-    '''
+def plot_svm_margin(svc, X: np.ndarray, t: np.ndarray):
+    """
     Plots the decision boundary and decision margins
     for a dataset of features X and labels t and a support
     vector machine svc.
@@ -53,9 +47,8 @@ def plot_svm_margin(
     classification model
     * X: [N x f] array of features
     * t: [N] array of target labels
-    '''
-    plt.scatter(X[:, 0], X[:, 1], c=t, s=30,
-                cmap=plt.cm.Paired)
+    """
+    plt.scatter(X[:, 0], X[:, 1], c=t, s=30, cmap=plt.cm.Paired)
 
     # plot the decision function
     ax = plt.gca()
@@ -72,13 +65,26 @@ def plot_svm_margin(
 
     # plot decision boundary and margins
     ax.contour(
-        XX, YY, Z,
-        colors='k', levels=[-1, 0, 1],
-        alpha=0.5, linestyles=['--', '-', '--'])
+        XX,
+        YY,
+        Z,
+        colors="k",
+        levels=[-1, 0, 1],
+        alpha=0.5,
+        linestyles=["--", "-", "--"],
+    )
 
     # plot support vectors
     ax.scatter(
         svc.support_vectors_[:, 0],
         svc.support_vectors_[:, 1],
-        s=100, linewidth=1, facecolors='none', edgecolors='k')
+        s=100,
+        linewidth=1,
+        facecolors="none",
+        edgecolors="k",
+    )
+    plt.title("Linear kernel SVM")
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.savefig("images/1_1_1.png")
     plt.show()

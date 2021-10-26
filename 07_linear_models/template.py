@@ -37,6 +37,10 @@ def _plot_mvn(fi):
     for i in range(fi.shape[1]):
         # print(fi[:, i])
         plt.plot(range(fi.shape[0]), fi[:, i], label=i)
+    plt.title("Output of basis functions as a function of features")
+    plt.xlabel("x")
+    plt.ylabel("$\phi(x)$")
+    plt.savefig("images/1_2_1.png")
     plt.show()
 
 
@@ -90,7 +94,7 @@ if __name__ == "__main__":
         mu[:, i] = np.linspace(mmin, mmax, M)
         i += 1
     fi = mvn_basis(X, mu, sigma)  # same as before
-    # _plot_mvn(fi)
+    _plot_mvn(fi)
     lamda = 0.001
     wml = max_likelihood_linreg(fi, t, lamda)
     print(linear_model(X, mu, sigma, wml))
