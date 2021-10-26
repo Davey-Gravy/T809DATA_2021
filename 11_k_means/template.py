@@ -83,7 +83,11 @@ def update_Mu(Mu: np.ndarray, X: np.ndarray, R: np.ndarray) -> np.ndarray:
     Returns:
     out (np.ndarray): A [k x f] array of updated prototypes.
     """
-    ...
+    out = np.zeros(Mu.shape)
+    for i in range(X.shape[0]):
+        for j in range(Mu.shape[0]):
+            out[j, :] += R[i, j] * X[i, :] / np.sum(R[:, j])
+    return out
 
 
 def k_means(X: np.ndarray, k: int, num_its: int) -> Union[list, np.ndarray, np.ndarray]:
@@ -166,9 +170,13 @@ def _plot_gmm():
 
 
 if __name__ == "__main__":
-    a = np.array([[1, 0, 0], [4, 4, 4], [2, 2, 2]])
-    b = np.array([[0, 0, 0], [4, 4, 4]])
-    # distances = distance_matrix(a, b)
-    dist = np.array([[1, 2, 3], [0.3, 0.1, 0.2], [7, 18, 2], [2, 0.5, 7]])
-    R = determine_r(dist)
-    print(determine_j(R, dist))
+    # a = np.array([[1, 0, 0], [4, 4, 4], [2, 2, 2]])
+    # b = np.array([[0, 0, 0], [4, 4, 4]])
+    # # distances = distance_matrix(a, b)
+    # dist = np.array([[1, 2, 3], [0.3, 0.1, 0.2], [7, 18, 2], [2, 0.5, 7]])
+    # R = determine_r(dist)
+    # print(determine_j(R, dist))
+    X = np.array([[0, 1, 0], [1, 0, 0], [0, 0, 0]])
+    Mu = np.array([[0.0, 0.5, 0.1], [0.8, 0.2, 0.3]])
+    R = np.array([[1, 0], [0, 1], [1, 0]])
+    update_Mu(Mu, X, R)
