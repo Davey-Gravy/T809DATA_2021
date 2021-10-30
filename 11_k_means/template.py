@@ -208,11 +208,14 @@ def plot_image_clusters():
 
 
 def _gmm_info():
-    ...
+    gmm = GaussianMixture(n_components=3).fit(X)
+    return gmm.means_,gmm.covariances_, gmm.weights_
 
 
 def _plot_gmm():
-    ...
+    gmm = GaussianMixture(n_components=3).fit(X)
+    pred = gmm.predict(X)
+    plot_gmm_results(X,pred,gmm.means_,gmm.covariances_)
 
 
 if __name__ == "__main__":
@@ -226,11 +229,13 @@ if __name__ == "__main__":
     # Mu = np.array([[0.0, 0.5, 0.1], [0.8, 0.2, 0.3]])
     # R = np.array([[1, 0], [0, 1], [1, 0]])
     # update_Mu(Mu, X, R)
-    # X, y, c = load_iris()
+    X, y, c = load_iris()
     # Mu, R, J = k_means(X, 4, 10)
     # _plot_j()
     # _plot_multi_j()
     # preds = k_means_predict(X, y, c, 5)
     # print(_iris_kmeans_accuracy())
     # _my_kmeans_on_image()
-    plot_image_clusters()
+    # plot_image_clusters()
+    # print(_gmm_info())
+    _plot_gmm()

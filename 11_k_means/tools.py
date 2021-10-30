@@ -78,6 +78,7 @@ def plot_gmm_results(
     plt.xticks(())
     plt.yticks(())
     plt.title('Gaussian Mixture')
+    plt.savefig('images/3_2_1.png')
     plt.show()
 
 
