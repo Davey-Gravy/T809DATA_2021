@@ -1,12 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
-
 from tools import load_cancer
 
 
 def standardize(X: np.ndarray) -> np.ndarray:
-    '''
+    """
     Standardize an array of shape [N x 1]
 
     Input arguments:
@@ -15,8 +14,14 @@ def standardize(X: np.ndarray) -> np.ndarray:
     Returns:
     (np.ndarray): A standardized version of X, also
     of shape [N x 1]
-    '''
-    ...
+    """
+
+    out = np.ndarray(X.shape)
+    mu = np.mean(X, axis=0)
+    sigma = np.std(X, axis=0)
+    for i in range(X.shape[0]):
+        out[i] = np.divide((X[i] - mu), sigma)
+    return out
 
 
 def scatter_standardized_dims(
@@ -24,7 +29,7 @@ def scatter_standardized_dims(
     i: int,
     j: int,
 ):
-    '''
+    """
     Plots a scatter plot of N points where the n-th point
     has the coordinate (X_ni, X_nj)
 
@@ -32,18 +37,25 @@ def scatter_standardized_dims(
     * X (np.ndarray): A [N x f] array
     * i (int): The first index
     * j (int): The second index
-    '''
-    ...
+    """
+    for n in range(X.shape[0]):
+        plt.scatter(X[n, i], X[n, j], c="C0")
 
 
 def _scatter_cancer():
-    X, y = load_cancer()
-    ...
+    X, y, features = load_cancer()
+    X_hat = standardize(X)
+    plt.figure(figsize=[16, 8])
+    for i in range(X.shape[1]):
+        plt.subplot(5, 6, i + 1)
+        plt.title(f"{features[i]}")
+        scatter_standardized_dims(X_hat, 0, i)
+    plt.savefig("images/1_3_1.png")
 
 
 def _plot_pca_components():
     ...
-    X, y = load_cancer()
+    X, y, features = load_cancer()
     for i in range(...):
         plt.subplot(5, 6, ...)
         ...
@@ -52,23 +64,30 @@ def _plot_pca_components():
 
 def _plot_eigen_values():
     ...
-    plt.xlabel('Eigenvalue index')
-    plt.ylabel('Eigenvalue')
+    plt.xlabel("Eigenvalue index")
+    plt.ylabel("Eigenvalue")
     plt.grid()
     plt.show()
 
 
 def _plot_log_eigen_values():
     ...
-    plt.xlabel('Eigenvalue index')
-    plt.ylabel('$\log_{10}$ Eigenvalue')
+    plt.xlabel("Eigenvalue index")
+    plt.ylabel("$\log_{10}$ Eigenvalue")
     plt.grid()
     plt.show()
 
 
 def _plot_cum_variance():
     ...
-    plt.xlabel('Eigenvalue index')
-    plt.ylabel('Percentage variance')
+    plt.xlabel("Eigenvalue index")
+    plt.ylabel("Percentage variance")
     plt.grid()
     plt.show()
+
+
+if __name__ == "__main__":
+    # X = np.array([[1, 2, 3, 4], [0, 0, 0, 0], [4, 5, 5, 4], [2, 2, 2, 2], [8, 6, 4, 2]])
+    # scatter_standardized_dims(X, 0, 2)
+    # plt.show()
+    _scatter_cancer()
